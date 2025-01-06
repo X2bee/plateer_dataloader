@@ -11,8 +11,9 @@ def plateer_dataset(name:str, token: str = None):
     2. 'ko-wiki' - 한국어 위키백과 데이터 셋
     3. 'ko-namuwiki' - 한국어 나무위키 데이터 셋
     4. 'kcbert-data' - KcBERT 학습 데이터 셋 (뉴스 댓글)
-    5. 'ko-nli' - 한국어 NLI 데이터 셋 (KAKAO제공 NLI 작업 학습용)
-    6. 'ko-sts' - 한국어 STS 데이터 셋 (KAKAO제공 STS 작업 학습용)
+    5. 'ko-nli-class' - 한국어 NLI 데이터 셋 (KAKAO제공 NLI 작업 학습용)
+    6. 'ko-nli-score' - 한국어 NLI 데이터 셋을 STS 형태로 변환환 (KAKAO제공 NLI 작업 학습용)
+    7. 'ko-sts' - 한국어 STS 데이터 셋 (KAKAO제공 STS 작업 학습용)
     
     token: str - Huggingface의 토큰을 입력합니다.
     x2bee repository에 접근할 수 있어야 합니다.
@@ -77,9 +78,9 @@ def plateer_dataset(name:str, token: str = None):
         
         return dataset
     
-    elif name == "ko-nli":
+    elif name == "ko-nli-class":
         login(token=token)
-        dataset = load_dataset("x2bee/Korean_NLI_all", data_dir="data")
+        dataset = load_dataset("x2bee/Korean_NLI_dataset", data_dir="pair-class")
         dataset = dataset['train']
         
         print("""
@@ -87,6 +88,22 @@ def plateer_dataset(name:str, token: str = None):
                 
                 KAKAO에서 공개한 한국어 NLI Task를 위한 학습용 데이터셋입니다.
                 데이터의 컬럼은 ["hypothesis", "premise", "label"]로 구성되어 있습니다.
+                데이터의 총 개수는 392,702개 입니다.
+
+                """)
+        
+        return dataset
+    
+    elif name == "ko-nli-score":
+        login(token=token)
+        dataset = load_dataset("x2bee/Korean_NLI_dataset", data_dir="pair-score")
+        dataset = dataset['train']
+        
+        print("""
+                Reference: https://github.com/kakaobrain/kor-nlu-datasets
+                
+                KAKAO에서 공개한 한국어 NLI Task를 위한 학습용 데이터셋을 STS의 형태로 가공한 것입니다.
+                데이터의 컬럼은 ["sentence1", "sentence2", "score"]로 구성되어 있습니다.
                 데이터의 총 개수는 392,702개 입니다.
 
                 """)
@@ -116,7 +133,8 @@ def plateer_dataset(name:str, token: str = None):
         print("2. 'ko-wiki'")
         print("3. 'ko-namuwiki'")
         print("4. 'kcbert-data'")
-        print("5. 'ko-nli'")
-        print("6. 'ko-sts'")
+        print("5. 'ko-nli-class'")
+        print("6. 'ko-nli-score'")
+        print("7. 'ko-sts'")
         
         return None
